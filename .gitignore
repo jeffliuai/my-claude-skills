@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Claude Code 本地設定
+.claude/settings.local.json
+settings.local.json
+
+# 測試檔案
+test/
+*.test.md
