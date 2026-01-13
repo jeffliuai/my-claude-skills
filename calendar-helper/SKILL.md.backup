@@ -1,0 +1,357 @@
+---
+name: calendar-helper
+description: Google Calendar 事件管理助手 - 建立、解析和管理 Calendar 事件。當使用者說「建立行事曆」、「加入 Calendar」、「建立會議」、「calendar event」時使用
+allowed-tools: Bash, Read, Write
+---
+
+# Google Calendar Helper
+
+## 功能說明
+
+完整的 Google Calendar 事件管理工具。
+
+**功能**：
+- ✅ 建立單次事件
+- ✅ 智能解析自然語言（「明天下午 3 點開會」）
+- ✅ 重複事件（每週、每月）
+- ✅ 邀請參加者
+- ✅ 自訂提醒
+- ✅ 設定地點和描述
+
+---
+
+## 首次使用
+
+### 步驟 1：OAuth 認證（只需做一次）
+
+**第一次使用時，需要進行 Google 帳號授權**：
+```bash
+cd ~/my-claude-skills/calendar-helper/scripts
+python3 calendar_helper.py create <<< '{}'
+```
+
+這會：
+1. 開啟瀏覽器
+2. 要求登入 Google 帳號
+3. 授權存取 Calendar
+4. 完成後會在本地儲存 token
+
+**認證完成後，token 會儲存在 `~/my-claude-skills/calendar-helper/token.pickle`**
+
+之後就不需要再次認證了（除非 token 過期或被刪除）。
+
+---
+
+## 執行步驟
+
+### 模式 1：快速建立（手動輸入）
+
+#### 步驟 1：收集事件資訊
+
+詢問使用者提供：
+```
+請提供事件資訊：
+
+📌 標題（必填）：
+📅 日期時間（必填）：例如「2026-01-15 15:00」
+⏰ 結束時間（選填）：預設為開始時間 + 1 小時
+📍 地點（選填）：
+📝 描述（選填）：
+👥 參加者（選填）：多個 Email 用逗號分隔
+⏰ 提醒（選填）：例如「15,60」表示提前 15 分鐘和 1 小時
+🔄 重複（選填）：每週/每月
+```
+
+#### 步驟 2：建立 JSON 並執行
+```bash
+cd ~/my-claude-skills/calendar-helper/scripts
+
+# 建立事件
+python3 calendar_helper.py create << 'EOF'
+{
+  "summary": "標題",
+  "description": "描述",
+  "location": "地點",
+  "start": "2026-01-15T15:00:00",
+  "end": "2026-01-15T16:00:00",
+  "attendees": ["email@example.com"],
+  "reminders": [15, 60],
+  "recurrence": "RRULE:FREQ=WEEKLY;BYDAY=MO"
+}
+EOF
+```
+
+**重複規則範例**：
+- 每週：`RRULE:FREQ=WEEKLY;BYDAY=MO`（每週一）
+- 每月：`RRULE:FREQ=MONTHLY;BYMONTHDAY=1`（每月 1 號）
+- 每天：`RRULE:FREQ=DAILY;COUNT=10`（10 天）
+
+#### 步驟 3：解析結果並回報
+
+輸出格式：
+```json
+{
+  "success": true,
+  "event_id": "abc123...",
+  "html_link": "https://calendar.google.com/...",
+  "summary": "事件標題",
+  "start": "2026-01-15T15:00:00+08:00"
+}
+```
+
+回報給使用者：
+```
+✅ 事件已建立！
+
+📌 標題：事件標題
+📅 時間：2026-01-15 15:00
+🔗 連結：https://calendar.google.com/...
+```
+
+---
+
+### 模式 2：智能解析（自然語言）
+
+#### 步驟 1：收集使用者輸入
+
+使用者可能會說：
+- "明天下午 3 點和 John 開會"
+- "下週三 10:00 討論 Q1 計畫"
+- "今天晚上 7 點吃飯"
+
+#### 步驟 2：解析文字
+```bash
+cd ~/my-claude-skills/calendar-helper/scripts
+
+python3 calendar_helper.py parse "明天下午 3 點和 John 開會"
+```
+
+輸出：
+```json
+{
+  "summary": "3 點  John  ",
+  "start": "2026-01-14T15:00:00+08:00",
+  "end": null,
+  "attendees": []
+}
+```
+
+#### 步驟 3：確認並建立
+
+顯示解析結果給使用者確認：
+```
+我理解的資訊：
+📌 標題：3 點 John
+📅 時間：明天（2026-01-14）15:00
+
+是否正確？（可以修改）
+```
+
+確認後，使用模式 1 的方式建立事件。
+
+---
+
+### 模式 3：批次建立（從檔案）
+
+如果使用者提供 CSV 或清單檔案：
+
+#### 步驟 1：讀取檔案
+```bash
+# 使用 Read 工具讀取檔案
+```
+
+#### 步驟 2：解析每一行
+
+CSV 格式範例：
+```
+標題,日期,時間,地點,參加者
+Team Meeting,2026-01-15,10:00,會議室 A,john@example.com
+Review,2026-01-16,14:00,線上,mary@example.com
+```
+
+#### 步驟 3：逐一建立
+
+對每個事件呼叫 `calendar_helper.py create`
+
+---
+
+## 常見問題處理
+
+### 問題 1：token 過期
+
+如果出現認證錯誤：
+```bash
+# 刪除 token 重新認證
+rm ~/my-claude-skills/calendar-helper/token.pickle
+
+# 重新執行會自動開啟認證流程
+```
+
+### 問題 2：時區問題
+
+預設時區為 `Asia/Taipei`（台北時間 GMT+8）
+
+如果需要其他時區，在 JSON 中指定：
+```json
+{
+  "start": "2026-01-15T15:00:00-05:00"
+}
+```
+
+### 問題 3：參加者沒收到邀請
+
+確認：
+1. Email 正確
+2. JSON 中有包含 `attendees` 欄位
+3. 執行時沒有錯誤訊息
+
+---
+
+## 重複事件規則
+
+### 常用規則
+
+**每週重複**：
+```
+RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR
+```
+（每週一、三、五）
+
+**每月重複**：
+```
+RRULE:FREQ=MONTHLY;BYMONTHDAY=1,15
+```
+（每月 1 號和 15 號）
+
+**有結束日期**：
+```
+RRULE:FREQ=WEEKLY;UNTIL=20261231T000000Z
+```
+（重複到 2026-12-31）
+
+**重複次數**：
+```
+RRULE:FREQ=DAILY;COUNT=10
+```
+（重複 10 次）
+
+---
+
+## 輸出管理
+
+### 儲存記錄（選用）
+
+如果使用者想保存建立記錄：
+```bash
+# 儲存到 output/
+cat > ~/my-claude-skills/calendar-helper/output/events-log.json << EOF
+{
+  "created_at": "2026-01-13T12:00:00",
+  "events": [...]
+}
+EOF
+```
+
+---
+
+## 互動範例
+
+### 範例 1：快速建立
+```
+使用者：幫我建立一個會議
+
+Claude：好的！請提供以下資訊：
+       📌 標題：
+       📅 日期時間：
+       📍 地點（選填）：
+
+使用者：
+標題：Team Sync
+日期：明天下午 2 點
+地點：會議室 A
+
+Claude：收到！建立中...
+       
+       [執行 calendar_helper.py]
+       
+       ✅ 事件已建立！
+       📌 Team Sync
+       📅 2026-01-14 14:00-15:00
+       📍 會議室 A
+       🔗 https://calendar.google.com/...
+```
+
+---
+
+### 範例 2：智能解析
+```
+使用者：下週三下午 3 點和 Mary 討論 Q1 目標
+
+Claude：讓我解析一下...
+       
+       [執行 parse]
+       
+       我理解的資訊：
+       📌 標題：討論 Q1 目標
+       📅 時間：2026-01-22（下週三）15:00
+       👥 參加者：Mary
+       
+       正確嗎？
+
+使用者：正確，Mary 的 Email 是 mary@company.com
+
+Claude：好的，建立中...
+       
+       ✅ 事件已建立並已發送邀請給 Mary！
+```
+
+---
+
+### 範例 3：重複事件
+```
+使用者：建立每週一早上 10 點的 Standup Meeting
+
+Claude：收到！這是重複事件，請確認：
+       📌 標題：Standup Meeting
+       📅 時間：每週一 10:00
+       🔄 重複：每週
+       
+       需要設定結束日期嗎？
+
+使用者：重複到今年底
+
+Claude：好的，建立中...
+       
+       ✅ 重複事件已建立！
+       📌 Standup Meeting
+       📅 每週一 10:00-11:00
+       🔄 重複到 2026-12-31
+```
+
+---
+
+## 注意事項
+
+- ⚠️ 首次使用需要 OAuth 認證（會開啟瀏覽器）
+- ⚠️ 時間格式建議使用 ISO 8601：`YYYY-MM-DDTHH:MM:SS`
+- ⚠️ 參加者需要正確的 Email 地址
+- ⚠️ 重複事件的規則較複雜，建議先確認使用者需求
+
+---
+
+## 費用
+
+✅ **完全免費**
+
+Google Calendar API 配額：
+- 每天 1,000,000 次請求
+- 個人使用完全在免費額度內
+
+---
+
+## 維護
+
+定期更新：
+- Python 套件版本
+- OAuth token（如過期）
+- 根據使用者反饋優化解析邏輯

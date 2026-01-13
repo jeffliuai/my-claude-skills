@@ -12,3 +12,65 @@ settings.local.json
 # 測試檔案
 test/
 *.test.md
+
+# Calendar Helper 敏感檔案
+calendar-helper/credentials.json
+calendar-helper/token.pickle
+calendar-helper/*.pickle
+
+# Daily Report 輸出
+daily-report/output/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Calendar Helper 敏感檔案
+calendar-helper/credentials.json
+calendar-helper/token.pickle
+calendar-helper/*.pickle
+
+# Daily Report 輸出
+daily-report/output/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
