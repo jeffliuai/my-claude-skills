@@ -74,3 +74,13 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# Vocabulary Builder - 排除使用者資料和輸出
+vocabulary-builder/output/
+vocabulary-builder/.metadata/
+
+# 一般排除
+**/.DS_Store
+**/test_*.json
+**/__pycache__/
+**/*.pyc
