@@ -84,3 +84,7 @@ vocabulary-builder/.metadata/
 **/test_*.json
 **/__pycache__/
 **/*.pyc
+
+# must-output-brain 敏感檔案（2026-08-16 補漏，此前從未被排除也從未被 commit）
+must-output-brain/.env
+must-output-brain/scripts/tg_token.txt
