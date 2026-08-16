@@ -88,3 +88,8 @@ vocabulary-builder/.metadata/
 # must-output-brain 敏感檔案（2026-08-16 補漏，此前從未被排除也從未被 commit）
 must-output-brain/.env
 must-output-brain/scripts/tg_token.txt
+
+# 其他子專案敏感檔案（2026-08-16 補漏，此前從未被排除也從未被 commit）
+video-transcriber/.env
+email-digest/.env
+discord-antigravity/.env
