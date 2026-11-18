@@ -93,3 +93,11 @@ must-output-brain/scripts/tg_token.txt
 video-transcriber/.env
 email-digest/.env
 discord-antigravity/.env
+
+# 通用憑證防線（2026-11-18）：公開 repo，任何子專案的 OAuth token / client 憑證 / .env 一律不得進版控
+# 起因：master-brain/ 的 3 個 Gmail/Calendar OAuth token 與 consumption-analysis/ 的 client 憑證未被排除
+**/token*.json
+**/token*.pickle
+**/credentials*.json
+**/.env
+**/.env.*
