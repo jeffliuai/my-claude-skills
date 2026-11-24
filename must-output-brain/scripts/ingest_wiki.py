@@ -19,7 +19,7 @@ except ImportError:
 from google import genai
 
 # --- Configuration ---
-VAULT_ROOT = Path("/Users/jeffliu/Documents/A05_Obsidian Vault")
+VAULT_ROOT = Path("/Users/jeffliu/A05_Obsidian Vault")
 WIKI_DIR = VAULT_ROOT / "300 LLM-Wiki"
 INDEX_DIR = WIKI_DIR / ".ai_index"
 DB_DIR = INDEX_DIR / "chroma_db"

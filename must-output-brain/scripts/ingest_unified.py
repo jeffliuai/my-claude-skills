@@ -60,7 +60,7 @@ except ImportError:
     HAS_YOUTUBE = False
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
-VAULT_ROOT  = Path("/Users/jeffliu/Documents/A05_Obsidian Vault")
+VAULT_ROOT  = Path("/Users/jeffliu/A05_Obsidian Vault")
 WIKI_DIR    = VAULT_ROOT / "300 LLM-Wiki"
 RAW_DIR     = VAULT_ROOT / "raw"
 INDEX_DIR   = WIKI_DIR / ".ai_index"
