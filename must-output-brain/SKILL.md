@@ -44,7 +44,7 @@ description: |
 
 6. **同步 Telegram 訊息 (Selective Sync)**：
     - 當接收到「在telegram上提到」、「同步 Telegram」或「處理 Telegram 訊息」指令時。
-    - 讀取 `/Users/jeffliu/Documents/A05_Obsidian Vault/000 INBOX/.tg_pending.json`。
+    - 讀取 `/Users/jeffliu/A05_Obsidian Vault/000 INBOX/.tg_pending.json`。
     - **規則 1 (分析模式)**：若訊息包含「我有一個想法」或以此開頭，則將其視為「原始輸入」丟入「四重思維轉化」流程 (步驟 2-5)。
     - **規則 2 (隨記模式)**：若訊息無特定關鍵字，則調用 `scripts/vault_utils.py` 將其直接以 `[時間] (TG) 內容` 格式存入當天 Daily Note 的「# I. 每日活動 / 雜記」區塊中。
     - 處理完後將該訊息標記為 `processed: true`。

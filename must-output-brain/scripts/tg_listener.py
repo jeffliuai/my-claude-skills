@@ -8,7 +8,7 @@ from pathlib import Path
 
 # Configuration
 TOKEN_FILE = Path(__file__).parent / "tg_token.txt"
-PENDING_FILE = Path("/Users/jeffliu/Documents/A05_Obsidian Vault/000 INBOX/.tg_pending.json")
+PENDING_FILE = Path("/Users/jeffliu/A05_Obsidian Vault/000 INBOX/.tg_pending.json")
 
 def get_token():
     if TOKEN_FILE.exists():
@@ -69,7 +69,7 @@ def handle_photo(message):
         # 生成檔名
         timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
         image_filename = f"{timestamp}_tg_image.jpg"
-        image_path = Path("/Users/jeffliu/Documents/A05_Obsidian Vault/000 INBOX") / image_filename
+        image_path = Path("/Users/jeffliu/A05_Obsidian Vault/000 INBOX") / image_filename
         
         # 保存圖片
         with open(image_path, 'wb') as f:
@@ -100,7 +100,7 @@ def handle_document(message):
         timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
         original_name = message.document.file_name
         doc_filename = f"{timestamp}_{original_name}"
-        doc_path = Path("/Users/jeffliu/Documents/A05_Obsidian Vault/000 INBOX") / doc_filename
+        doc_path = Path("/Users/jeffliu/A05_Obsidian Vault/000 INBOX") / doc_filename
         
         # 保存文件
         with open(doc_path, 'wb') as f:

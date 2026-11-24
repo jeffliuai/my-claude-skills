@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 env_path = Path(__file__).parent.parent / ".env"
 load_dotenv(env_path)
 
-WIKI_DIR = Path("/Users/jeffliu/Documents/A05_Obsidian Vault/300 LLM-Wiki")
+WIKI_DIR = Path("/Users/jeffliu/A05_Obsidian Vault/300 LLM-Wiki")
 SKIP_FILES = {"000_index.md", "001_log.md"}
 
 sys.path.insert(0, str(Path(__file__).parent))

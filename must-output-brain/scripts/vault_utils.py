@@ -18,7 +18,7 @@ except ImportError:
     HAS_OPENCC = False
     print("Warning: opencc-python-reimplemented not installed. Simplified Chinese will not be converted.")
 
-VAULT_ROOT = Path("/Users/jeffliu/Documents/A05_Obsidian Vault")
+VAULT_ROOT = Path("/Users/jeffliu/A05_Obsidian Vault")
 INBOX_DIR = VAULT_ROOT / "000 INBOX"
 CARDS_DIR = VAULT_ROOT / "002 CARDS"
 CALENDAR_DIR = VAULT_ROOT / "003 CALENDAR"

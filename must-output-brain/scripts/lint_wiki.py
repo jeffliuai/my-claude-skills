@@ -24,7 +24,7 @@ import datetime
 import subprocess
 from pathlib import Path
 
-VAULT_ROOT  = Path("/Users/jeffliu/Documents/A05_Obsidian Vault")
+VAULT_ROOT  = Path("/Users/jeffliu/A05_Obsidian Vault")
 WIKI_DIR    = VAULT_ROOT / "300 LLM-Wiki"
 LOG_FILE    = WIKI_DIR / "001_log.md"
 INDEX_FILE  = WIKI_DIR / "000_index.md"

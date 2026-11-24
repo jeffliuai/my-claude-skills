@@ -15,7 +15,7 @@ status = "已執行"
 note = "慢跑與靈感滿分；貼文與 AI 案例待加強"
 
 # Update 12週執行報告_2026Q1.md
-report_path = Path("/Users/jeffliu/Documents/A05_Obsidian Vault/003 CALENDAR/12週執行報告_2026Q1.md")
+report_path = Path("/Users/jeffliu/A05_Obsidian Vault/003 CALENDAR/12週執行報告_2026Q1.md")
 if report_path.exists():
     with open(report_path, 'r', encoding='utf-8') as f:
         content = f.read()

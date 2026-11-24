@@ -10,7 +10,7 @@ from google import genai
 load_dotenv(Path(__file__).parent.parent / ".env")
 
 # Adjust paths relative to the script location if needed
-OBSIDIAN_INBOX = Path("/Users/jeffliu/Documents/A05_Obsidian Vault/003 CALENDAR")
+OBSIDIAN_INBOX = Path("/Users/jeffliu/A05_Obsidian Vault/003 CALENDAR")
 
 # Configure Gemini
 api_key = os.environ.get("GEMINI_API_KEY")
