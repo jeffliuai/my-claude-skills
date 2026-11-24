@@ -8,12 +8,10 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 try:
     import chromadb
-    from chromadb.utils import embedding_functions
+    from embedding import OllamaEmbeddingFunction
 except ImportError:
     print("Error: chromadb is not installed.")
     exit(1)
-
-from google import genai
 
 # --- Configuration ---
 VAULT_ROOT = Path("/Users/jeffliu/A05_Obsidian Vault")
@@ -25,16 +23,10 @@ if not DB_DIR.exists():
     print("尚未建立索引，請先執行 reindex_all.py")
     exit(1)
 
-api_key = os.environ.get("GEMINI_API_KEY")
-if not api_key:
-    print("Error: GEMINI_API_KEY not found in environment.")
-    exit(1)
-
-gemini_ef = embedding_functions.GoogleGenerativeAiEmbeddingFunction(api_key=api_key, model_name="models/text-embedding-004")
 chroma_client = chromadb.PersistentClient(path=str(DB_DIR))
 collection = chroma_client.get_collection(
     name="llm_wiki_cards", 
-    embedding_function=gemini_ef
+    embedding_function=OllamaEmbeddingFunction()
 )
 
 def search_semantic(query_text, limit=3):

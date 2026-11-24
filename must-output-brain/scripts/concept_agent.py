@@ -10,7 +10,7 @@ concept_agent.py — 主動發現 LLM-Wiki 中語意接近但從未連結的跨�
   5. 輸出 JSON 供 Claude 合成「你沒想到的連結」報告
 
 Usage:
-  python3 concept_agent.py [--top N] [--sim-low 0.55] [--sim-high 0.82]
+  python3 concept_agent.py [--top N] [--sim-low 0.33] [--sim-high 0.74]
 
 Output: JSON to stdout
 """
@@ -39,8 +39,6 @@ try:
     load_dotenv(Path(__file__).parent.parent / ".env")
 except ImportError:
     pass
-
-from google import genai as google_genai
 
 VAULT_ROOT = Path("/Users/jeffliu/A05_Obsidian Vault")
 WIKI_DIR   = VAULT_ROOT / "300 LLM-Wiki"
@@ -99,14 +97,9 @@ def cosine_sim_matrix(embeddings: np.ndarray) -> np.ndarray:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--top",      type=int,   default=15,   help="Number of pairs to return")
-    parser.add_argument("--sim-low",  type=float, default=0.55, help="Minimum similarity threshold")
-    parser.add_argument("--sim-high", type=float, default=0.82, help="Maximum similarity threshold")
+    parser.add_argument("--sim-low",  type=float, default=0.33, help="Minimum similarity threshold (qwen3-embedding:4b calibrated 2026-11-24)")
+    parser.add_argument("--sim-high", type=float, default=0.74, help="Maximum similarity threshold (qwen3-embedding:4b calibrated 2026-11-24)")
     args = parser.parse_args()
-
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if not api_key:
-        print(json.dumps({"error": "GEMINI_API_KEY not set"}))
-        exit(1)
 
     if not DB_DIR.exists():
         print(json.dumps({"error": "ChromaDB not found. Run /ingest first."}))

@@ -48,37 +48,18 @@ def query_chromadb(question: str, top_n: int):
     """Query ChromaDB with the same embedding function used at index time."""
     try:
         import chromadb
-        from chromadb.utils import embedding_functions
-        from google import genai as google_genai
+        from embedding import OllamaEmbeddingFunction
     except ImportError as e:
         return None, f"Missing dependency: {e}"
 
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if not api_key:
-        return None, "GEMINI_API_KEY not set"
-
     if not DB_DIR.exists():
         return None, "ChromaDB index not found. Run /ingest on some pages first."
-
-    class GeminiEmbeddingFunction(embedding_functions.EmbeddingFunction):
-        def __init__(self, key, model="models/gemini-embedding-2"):
-            self.client = google_genai.Client(api_key=key)
-            self.model_name = model
-
-        def __call__(self, input):
-            response = self.client.models.embed_content(
-                model=self.model_name, contents=input
-            )
-            return [e.values for e in response.embeddings]
-
-        def name(self):
-            return "GeminiEmbeddingFunction"
 
     try:
         client = chromadb.PersistentClient(path=str(DB_DIR))
         collection = client.get_collection(
             name="llm_wiki_cards",
-            embedding_function=GeminiEmbeddingFunction(key=api_key),
+            embedding_function=OllamaEmbeddingFunction(),
         )
     except Exception as e:
         return None, f"Cannot open collection: {e}"

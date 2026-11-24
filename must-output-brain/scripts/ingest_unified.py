@@ -284,32 +284,14 @@ def index_file(file_path: Path):
     vector_indexed = False
     if not HAS_CHROMA:
         print("⚠️  chromadb not installed, skipping vector index.")
-    elif not os.environ.get("GEMINI_API_KEY"):
-        print("⚠️  GEMINI_API_KEY not set, skipping vector index.")
     else:
         try:
-            from google import genai as google_genai
+            from embedding import OllamaEmbeddingFunction
 
-            class GeminiGenAiEmbeddingFunction(embedding_functions.EmbeddingFunction):
-                def __init__(self, key: str, model: str = "models/gemini-embedding-2"):
-                    self.client = google_genai.Client(api_key=key)
-                    self.model_name = model
-
-                def __call__(self, input: list) -> list:
-                    response = self.client.models.embed_content(
-                        model=self.model_name,
-                        contents=input
-                    )
-                    return [e.values for e in response.embeddings]
-
-                def name(self):
-                    return "GeminiGenAiEmbeddingFunction"
-
-            gemini_ef = GeminiGenAiEmbeddingFunction(key=os.environ["GEMINI_API_KEY"])
             chroma_client = chromadb.PersistentClient(path=str(DB_DIR))
             collection = chroma_client.get_or_create_collection(
                 name="llm_wiki_cards",
-                embedding_function=gemini_ef,
+                embedding_function=OllamaEmbeddingFunction(),
                 metadata={"hnsw:space": "cosine"},
             )
             collection.upsert(
@@ -318,10 +300,8 @@ def index_file(file_path: Path):
                 ids=[rel_str],
             )
             vector_indexed = True
-        except ImportError:
-            print("⚠️  google-genai not installed, skipping vector index. Run: pip install google-genai")
         except Exception as e:
-            print(f"⚠️  Vector index failed, continuing SQLite graph index: {e}")
+            print(f"⚠️  Vector index failed (Spark Ollama unreachable?), continuing SQLite graph index: {e}")
 
     # SQLite: extract graph edges from content
     conn = sqlite3.connect(str(GRAPH_DB))
