@@ -22,7 +22,7 @@ DB_DIR = INDEX_DIR / "chroma_db"
 GRAPH_DB = INDEX_DIR / "wiki_graph.db"
 
 if not DB_DIR.exists():
-    print("尚未建立索引，請先執行 ingest_wiki.py")
+    print("尚未建立索引，請先執行 reindex_all.py")
     exit(1)
 
 api_key = os.environ.get("GEMINI_API_KEY")

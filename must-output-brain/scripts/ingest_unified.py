@@ -276,7 +276,7 @@ def index_file(file_path: Path):
     # Extract summary and graph from frontmatter/content for embedding
     # Use first 500 chars as embedding doc if no summary section found
     import re
-    summary_match = re.search(r"## 核心摘要.*?\n(.*?)(?=\n##|\Z)", content, re.DOTALL)
+    summary_match = re.search(r"## 核心摘要.*?\n(.*?)(?=\n##|\n---|\Z)", content, re.DOTALL)
     embed_text = summary_match.group(1).strip()[:1000] if summary_match else content[:500]
 
     rel_str = str(file_path.relative_to(WIKI_DIR))
